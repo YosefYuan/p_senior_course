@@ -99,3 +99,37 @@ products = [
 ]
 
 print('The price of product 432314553 is {}'.format(find_product_price(products, 432314553)))
+
+# product num with the unique price
+def find_unique_price_using_list(products):
+    unique_price_list = []
+    for _, price in products:
+        if price not in unique_price_list:
+            unique_price_list.append(price)
+    return len(unique_price_list)
+
+products = [
+    (143121312, 100),
+    (432314553, 30),
+    (32421912367, 150),
+    (937153201, 30)
+]
+
+print('number of unique price is: {}'.format(find_unique_price_using_list(products)))
+
+
+# use set to solve the problem
+def find_unique_price_using_set(products):
+    unique_price_set = set()
+    for _, price in products:
+        unique_price_set.add(price)
+    return len(unique_price_set)
+
+products = [
+    (143121312, 100),
+    (432314553, 30),
+    (32421912367, 150),
+    (937153201, 30)
+]
+
+print('number of unique price is: {}'.format(find_unique_price_using_set(products)))
