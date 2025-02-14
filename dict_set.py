@@ -84,6 +84,18 @@ d_sorted_by_value # [('b', 1), ('a', 2), ('c', 10
 s = {3, 4, 2, 1}
 sorted(s) # [1, 2, 3, 4]
 
+# save the data in this kind of data structure, and find the ele meets the condition
 
+def find_product_price(products, product_id):
+    for id, price in products:
+        if id == product_id:
+            return price
+    return None
 
+products = [
+    (143121312, 100),
+    (432314553, 30),
+    (32421912367, 150)
+]
 
+print('The price of product 432314553 is {}'.format(find_product_price(products, 432314553)))
