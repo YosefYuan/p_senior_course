@@ -133,3 +133,19 @@ products = [
 ]
 
 print('number of unique price is: {}'.format(find_unique_price_using_set(products)))
+
+
+import time
+id = [x for x in range(0, 10000)]
+price = [x for x in range(20000, 30000)]
+products = list(zip(id, price))
+
+start_using_list = time.perf_counter()
+find_unique_price_using_list(products)
+end_using_list = time.perf_counter()
+print('time elapse using list: {}'.format(end_using_list - start_using_list))
+
+start_using_set = time.perf_counter()
+find_unique_price_using_set(products)
+end_using_set = time.perf_counter()
+print('time elapse using set: {}'.format(end_using_set - start_using_set))
