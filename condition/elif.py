@@ -56,3 +56,11 @@ for name, price in name_price.items():
         if color == 'red':
             continue
         print('name: {}, color: {}'.format(name, color))
+
+
+l = [1, 2, 3, 4, 5, 6, 7]
+index = 0
+while index < len(l):
+    print(l[index])
+    index += 1
+
