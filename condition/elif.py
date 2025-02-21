@@ -44,3 +44,15 @@ for name, price in name_price.items():
 
         else:
             print('name: {}, color: {}'.format(name, 'None'))
+
+
+for name, price in name_price.items():
+    if price >= 1000:
+        continue
+    if name not in name_color:
+        print('name: {}, color: {}'.format(name, 'None'))
+        continue
+    for color in name_color[name]:
+        if color == 'red':
+            continue
+        print('name: {}, color: {}'.format(name, color))
