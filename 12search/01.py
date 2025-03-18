@@ -44,7 +44,7 @@ class SimpleEngine(SearchEngineBase):
 search_engine = SimpleEngine()
 main(search_engine)
 
-
+# version 2
 import re
 
 class BOWEngine(SearchEngineBase):
@@ -79,4 +79,105 @@ class BOWEngine(SearchEngineBase):
         return set(word_list)
     
 search_engine = BOWEngine()
+main(search_engine)
+
+
+# version 3
+
+import re
+
+class BOWInvertedIndexEngine(SearchEngineBase):
+    def __init__(self):
+        super(BOWInvertedIndexEngine, self).__init__()
+        self.inverted_index = {}
+
+    def process_corpus(self, id, text):
+        words = self.parse_text_to_words(text)
+        for word in words:
+            if word not in self.inverted_index:
+                self.inverted_index[word] = []
+            self.inverted_index[word].append(id)
+    
+    def search(self, query):
+        query_words = list(self.parse_text_to_words(query))
+        query_words_index = list()
+        for query_word in query_words:
+            query_words_index.append(0)
+
+        for query_word in query_words:
+            if query_word not in self.inverted_index:
+                return []
+            
+        result = []
+        while True:
+
+            current_ids = []
+            
+            for idx, query_word in enumerate(query_words):
+                current_index = query_words_index[idx]
+                current_inverted_list = self.inverted_index[query_word]
+
+                if current_index >= len(current_inverted_list):
+                    return result
+                
+                current_ids.append(current_inverted_list[current_index])
+
+            if all(x == current_ids[0] for x in current_ids):
+                result.append(current_ids[0])
+                query_words_index = [x + 1 for x in query_words_index]
+                continue
+
+            min_val = min(current_ids)
+            min_val_pos = current_ids.index(min_val)
+            query_words_index[min_val_pos] += 1
+
+    @staticmethod
+    def parse_text_to_words(text):
+        text = re.sub(r'[^\w ]', ' ', text)
+        
+        text = text.lower()
+
+        word_list = text.split(' ')
+
+        word_list = filter(None, word_list)
+
+        return set(word_list)
+    
+search_engine = BOWInvertedIndexEngine()
+main(search_engine)
+
+# LRU
+
+import pylru
+
+class LRUCache(object):
+    def __init__(self, size = 32):
+        self.cache = pylru.lrucache(size)
+
+    def has(self, key):
+        return key in self.cache
+    
+    def get(self, key):
+        return self.cache[key]
+    
+    def set(self, key, value):
+        self.cache[key] = value
+
+
+class BOWInvertedIndexEngineWithcache(BOWInvertedIndexEngine, LRUCache):
+    def __init__(self):
+        super(BOWInvertedIndexEngineWithcache, self).__init__()
+        LRUCache.__init__(self)
+
+    def search(self, query):
+        if self.has(query):
+            print('cache hit:')
+            return self.get(query)
+        
+        result = super(BOWInvertedIndexEngineWithcache, self).search(query)
+        self.set(query, result)
+
+        return result
+
+search_engine = BOWInvertedIndexEngineWithcache()
 main(search_engine)
